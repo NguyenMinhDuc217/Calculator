@@ -33,11 +33,73 @@ class Calculator extends StatefulWidget{
 }
 
 class _CalculatorState extends State<Calculator>{
-  final String number="0";
+  String history = "";
+  String result="0";
+  String temp="0";
+  double number1 = 0.0;
+  double number2 = 0.0;
+  String calculation = "";
 
-  Widget _buildOutlinedButton(String text,Color color,String number,{double width=50}) {
+  buttonPressed(String buttonText){
+    if(result == "0"){
+      result = buttonText;
+    }else if(result == temp){
+      result = buttonText;
+      history = "";
+    }
+    else if(buttonText == "AC"){
+      history = "";
+      result = "0";
+      temp="0";
+    }
+    else if(buttonText == "C"){
+      result=result.substring(0,result.length-1);
+    }
+    else if(buttonText == "+"||buttonText == "-"||buttonText == "x"||buttonText == "/"){
+      number1 = double.parse(result);
+      history = history + result + buttonText;
+      result = "0";
+      calculation = buttonText;
+      temp="0";
+    }
+    else if(buttonText == "="){
+      history = history + result + buttonText;
+      number2 = double.parse(result);
+      if(calculation == "+"){
+        temp = (number1+number2).toString();
+      }
+      else if(buttonText == "-"){
+        temp = (number1-number2).toString();
+      }
+      else if(buttonText == "x"){
+        temp = (number1*number2).toString();
+      }
+      else if(buttonText == "/"){
+        if(number2 != 0){
+          temp = (number1/number2).toString();
+        }
+        else {
+          temp = "Cannot divide by zero!";
+        }
+      }
+      result = double.parse(temp).toStringAsFixed(2);
+      
+      number1 = number2 = 0.0;
+      calculation = "";
+    }
+    else{
+      result = result + buttonText;
+    }
+    setState(() {
+      
+    });
+  }
+
+  Widget _buildOutlinedButton(String text,Color color,{double width=50}) {
   return Container(margin:EdgeInsets.fromLTRB(0,5,10,0), child: OutlinedButton(
-      onPressed: (){},
+      onPressed: (){
+        buttonPressed(text);
+      },
       child: Text(text,style: TextStyle(color: Colors.white)),
       style: OutlinedButton.styleFrom(
           shape:
@@ -56,50 +118,55 @@ class _CalculatorState extends State<Calculator>{
                 margin: const EdgeInsets.only(top: 10),
                 width: 215,
                 height: 150,
-                child: Text(number,style: TextStyle(fontSize: 20,color: Colors.white),),
+                child: Column(
+                  children: [
+                    Text(history,style: TextStyle(fontSize: 17),),
+                    Text(result,style: TextStyle(fontSize: 20),),
+                  ],
+                )
               ),
               Row(
                 mainAxisSize : MainAxisSize.min,
                 children: [
-                  _buildOutlinedButton("AC",Colors.green,number),
-                  _buildOutlinedButton("C",Colors.green,number),
-                  _buildOutlinedButton("%",Colors.green,number),
-                  _buildOutlinedButton("/",Colors.blue,number),
+                  _buildOutlinedButton("AC",Colors.green),
+                  _buildOutlinedButton("C",Colors.green),
+                  _buildOutlinedButton("%",Colors.green),
+                  _buildOutlinedButton("/",Colors.blue),
                 ],
               ),
               Row(
                 mainAxisSize : MainAxisSize.min,
                 children: [
-                  _buildOutlinedButton("7",Colors.grey,number),
-                  _buildOutlinedButton("8",Colors.grey,number),
-                  _buildOutlinedButton("9",Colors.grey,number),
-                  _buildOutlinedButton("*",Colors.blue,number),
+                  _buildOutlinedButton("7",Colors.grey),
+                  _buildOutlinedButton("8",Colors.grey),
+                  _buildOutlinedButton("9",Colors.grey),
+                  _buildOutlinedButton("x",Colors.blue),
                 ],
               ),
               Row(
                 mainAxisSize : MainAxisSize.min,
                 children: [
-                  _buildOutlinedButton("4",Colors.grey,number),
-                  _buildOutlinedButton("5",Colors.grey,number),
-                  _buildOutlinedButton("6",Colors.grey,number),
-                  _buildOutlinedButton("-",Colors.blue,number),
+                  _buildOutlinedButton("4",Colors.grey),
+                  _buildOutlinedButton("5",Colors.grey),
+                  _buildOutlinedButton("6",Colors.grey),
+                  _buildOutlinedButton("-",Colors.blue),
                 ],
               ),
               Row(
                 mainAxisSize : MainAxisSize.min,
                 children: [
-                  _buildOutlinedButton("1",Colors.grey,number),
-                  _buildOutlinedButton("2",Colors.grey,number),
-                  _buildOutlinedButton("3",Colors.grey,number),
-                  _buildOutlinedButton("+",Colors.blue,number),
+                  _buildOutlinedButton("1",Colors.grey),
+                  _buildOutlinedButton("2",Colors.grey),
+                  _buildOutlinedButton("3",Colors.grey),
+                  _buildOutlinedButton("+",Colors.blue),
                 ],
               ),
                 Row(
                   mainAxisSize : MainAxisSize.min,
                 children: [
-                  _buildOutlinedButton("0",Colors.grey,number,width:110),
-                  _buildOutlinedButton(".",Colors.grey,number),
-                  _buildOutlinedButton("=",Colors.blue,number),
+                  _buildOutlinedButton("0",Colors.grey,width:110),
+                  _buildOutlinedButton(".",Colors.grey),
+                  _buildOutlinedButton("=",Colors.blue),
                 ],
               ),
             ],
