@@ -39,13 +39,18 @@ class _CalculatorState extends State<Calculator>{
   double number1 = 0.0;
   double number2 = 0.0;
   String calculation = "";
+  int index = 0;
 
   buttonPressed(String buttonText){
-    if(result == "0"){
-      result = buttonText;
-    }else if(result == temp){
-      result = buttonText;
-      history = "";
+    if(result == "0" && buttonText != "0"){
+      if(history != "" && index == 1)
+      {
+        history = "";  
+        index--;     
+      }
+      if(buttonText != "AC" && buttonText != "C"){
+        result = buttonText;
+      }
     }
     else if(buttonText == "AC"){
       history = "";
@@ -55,12 +60,23 @@ class _CalculatorState extends State<Calculator>{
     else if(buttonText == "C"){
       result=result.substring(0,result.length-1);
     }
-    else if(buttonText == "+"||buttonText == "-"||buttonText == "x"||buttonText == "/"){
+    else if(buttonText == "+" || 
+            buttonText == "-"||
+            buttonText == "x"||
+            buttonText == "/"){
       number1 = double.parse(result);
       history = history + result + buttonText;
       result = "0";
       calculation = buttonText;
       temp="0";
+    }
+    else if(buttonText == "."){
+      if(result.contains(".")){
+        Text("Already conatains a decimals");
+        return;
+      }else{
+        result = result + buttonText;
+      }
     }
     else if(buttonText == "="){
       history = history + result + buttonText;
@@ -68,13 +84,13 @@ class _CalculatorState extends State<Calculator>{
       if(calculation == "+"){
         temp = (number1+number2).toString();
       }
-      else if(buttonText == "-"){
+      if(calculation == "-"){
         temp = (number1-number2).toString();
       }
-      else if(buttonText == "x"){
+      if(calculation == "x"){
         temp = (number1*number2).toString();
       }
-      else if(buttonText == "/"){
+      if(calculation == "/"){
         if(number2 != 0){
           temp = (number1/number2).toString();
         }
@@ -83,9 +99,11 @@ class _CalculatorState extends State<Calculator>{
         }
       }
       result = double.parse(temp).toStringAsFixed(2);
-      
+      history = history + result;
+      result = "0";
       number1 = number2 = 0.0;
       calculation = "";
+      index++;
     }
     else{
       result = result + buttonText;
@@ -94,6 +112,70 @@ class _CalculatorState extends State<Calculator>{
       
     });
   }
+
+//  String result = "0";
+
+//   String temp = "0";
+//   double number1 = 0.0;
+//   double number2 = 0.0;
+//   String calculation = "";
+//   int index = 0;
+
+//   buttonPressed(String buttonText) {
+//     if(index == 1){
+//       result = "0";
+//       result = buttonText;
+//       index--;
+//     }
+//     if (buttonText == "AC") {
+//       temp = "0";
+//       number1 = 0.0;
+//       number2 = 0.0;
+//       calculation = "";
+//     }
+//     else if(buttonText == "C"){
+//       result = result.substring(0,result.length-1);
+//     }
+//      else if (buttonText == "+" || buttonText == "-" || buttonText == "/" || buttonText == "x") {
+//       number1 = double.parse(result);
+//       calculation = buttonText;
+//       temp = "0";
+//     } else if (buttonText == ".") {
+//       if (temp.contains(".")) {
+//         print("Already conatains a decimals");
+//         return;
+//       } else {
+//         temp = temp + buttonText;
+//       }
+//     } else if (buttonText == "=") {
+//       number2 = double.parse(result);
+
+//       if (calculation == "+") {
+//         temp = (number1 + number2).toString();
+//       }
+//       if (calculation == "-") {
+//         temp = (number1 - number2).toString();
+//       }
+//       if (calculation == "x") {
+//         temp = (number1 * number2).toString();
+//       }
+//       if (calculation == "/") {
+//         temp = (number1 / number2).toString();
+//       }
+
+//       number1 = number2 = 0.0;
+//       calculation = "";
+//       index++;
+//     } else {
+//       temp = temp + buttonText;
+//     }
+
+//     print(temp);
+
+//     setState(() {
+//       result = double.parse(temp).toStringAsFixed(2);
+//     });
+//   }
 
   Widget _buildOutlinedButton(String text,Color color,{double width=50}) {
   return Container(margin:EdgeInsets.fromLTRB(0,5,10,0), child: OutlinedButton(
