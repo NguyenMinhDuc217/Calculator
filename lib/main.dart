@@ -61,7 +61,8 @@ class _CalculatorState extends State<Calculator> {
     } else if (buttonText == "+" ||
         buttonText == "-" ||
         buttonText == "x" ||
-        buttonText == "/") {
+        buttonText == "/" ||
+        buttonText == "%") {
       number1 = double.parse(result);
       history = history + " " + result + " " + buttonText;
       result = "0";
@@ -93,6 +94,13 @@ class _CalculatorState extends State<Calculator> {
           temp = "Cannot divide by zero!";
         }
       }
+      if (calculation == "%") {
+        if (number2 != 0) {
+          temp = (number1 % number2).toString();
+        } else {
+          temp = "Result is undefined";
+        }
+      }
       result = temp;
       history = history + " " + result;
       result = "0";
@@ -106,7 +114,7 @@ class _CalculatorState extends State<Calculator> {
   }
 
   Widget _buildOutlinedButton(String text, Color color, {double width = 60}) {
-   return HoverContainer(
+    return HoverContainer(
         margin: EdgeInsets.fromLTRB(0, 5, 10, 0),
         hoverWidth: width,
         hoverHeight: 50,
@@ -122,10 +130,11 @@ class _CalculatorState extends State<Calculator> {
               backgroundColor: color,
             )));
   }
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [   
+      children: [
         Container(
             alignment: Alignment.bottomRight,
             padding: EdgeInsets.fromLTRB(0, 0, 10, 5),
@@ -134,13 +143,13 @@ class _CalculatorState extends State<Calculator> {
             height: 150,
             child: Column(
               // Dùng để căn chỉnh về bên phải container
-              crossAxisAlignment : CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
               // Dùng để căn chỉnh về phía dưới container
-              mainAxisAlignment : MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
                   history,
-                  style: TextStyle(fontSize: 20,color:Colors.grey),
+                  style: TextStyle(fontSize: 20, color: Colors.grey),
                 ),
                 Text(
                   result,
